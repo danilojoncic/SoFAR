@@ -1,0 +1,23 @@
+POST http://localhost:8080/user/create
+Content-Type: application/json
+
+{
+  "firstName": "Pera",
+  "lastName": "Peric",
+  "email": "mejl2@gmail.com",
+  "password": "sifrica",
+  "permissions": [
+    "CAN_VIW"
+  ]
+}
+
+###
+GET http://localhost:8080/user
+Accept: application/json
+
+###
+DELETE http://localhost:8080/user/delete/1
+Accept: application/json
+
+###
+

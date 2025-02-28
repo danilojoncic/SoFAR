@@ -9,7 +9,7 @@ import java.util.Set;
 @Entity
 @Data
 @NoArgsConstructor
-public class User {
+public class SUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,4 +30,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     private Set<Permission> permissions;
+
+    public SUser(String firstName, String lastName, String email, String password, Set<Permission> permissions) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.permissions = permissions;
+    }
 }

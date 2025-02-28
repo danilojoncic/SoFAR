@@ -4,7 +4,7 @@ import dj.nwp.sofar.dto.Message;
 import dj.nwp.sofar.dto.ServiceResponse;
 import dj.nwp.sofar.dto.UserOperation;
 import dj.nwp.sofar.model.Permission;
-import dj.nwp.sofar.model.User;
+import dj.nwp.sofar.model.SUser;
 import dj.nwp.sofar.repository.PermissionRepository;
 import dj.nwp.sofar.repository.UserRepository;
 import dj.nwp.sofar.service.abstraction.UserAbs;
@@ -39,7 +39,7 @@ public class UserService implements UserAbs {
     @Override
     public ServiceResponse getOneUserBy(Long id) {
         return userRepository.findById(id)
-                .map(user -> new ServiceResponse(200,user))
+                .map(SUser -> new ServiceResponse(200, SUser))
                 .orElseGet(()->new ServiceResponse(404,new Message("User with id "+id+" does not exist")));
     }
 
@@ -53,11 +53,11 @@ public class UserService implements UserAbs {
             return new ServiceResponse(401, new Message("Bad Permissions"));
         }
 
-        User user = new User();
-        user.setEmail(dto.email());
-        user.setFirstName(dto.firstName());
-        user.setLastName(dto.lastName());
-        user.setPassword(dto.password());
+        SUser SUser = new SUser();
+        SUser.setEmail(dto.email());
+        SUser.setFirstName(dto.firstName());
+        SUser.setLastName(dto.lastName());
+        SUser.setPassword(dto.password());
 
         Set<Permission> userPerms = new HashSet<>();
 
@@ -67,8 +67,8 @@ public class UserService implements UserAbs {
             userPerms.add(permission);
         });
 
-        user.setPermissions(userPerms);
-        userRepository.save(user);
+        SUser.setPermissions(userPerms);
+        userRepository.save(SUser);
 
         return new ServiceResponse(201, new Message("User created!"));
     }
@@ -77,7 +77,7 @@ public class UserService implements UserAbs {
     @Override
     public ServiceResponse deleteUser(Long id) {
         return userRepository.findById(id)
-                .map(user -> {
+                .map(SUser -> {
                     userRepository.deleteById(id);
                     return new ServiceResponse(201,new Message("User with id "+id+" deleted"));
                 })
@@ -87,19 +87,19 @@ public class UserService implements UserAbs {
     @Transactional
     @Override
     public ServiceResponse editUser(Long id, UserOperation dto) {
-        return userRepository.findById(id).map(user -> {
-            if (dto.firstName() != null) user.setFirstName(dto.firstName());
-            if (dto.lastName() != null) user.setLastName(dto.lastName());
+        return userRepository.findById(id).map(SUser -> {
+            if (dto.firstName() != null) SUser.setFirstName(dto.firstName());
+            if (dto.lastName() != null) SUser.setLastName(dto.lastName());
 
             if (dto.email() != null && userRepository.findByEmail(dto.email())
-                    .filter(existingUser -> !existingUser.getId().equals(id))
+                    .filter(existingSUser -> !existingSUser.getId().equals(id))
                     .isPresent()) {
                 return new ServiceResponse(401, new Message("Email is already in use by another user"));
             }
 
 
-            if (dto.email() != null) user.setEmail(dto.email());
-            if (dto.password() != null) user.setPassword(dto.password());
+            if (dto.email() != null) SUser.setEmail(dto.email());
+            if (dto.password() != null) SUser.setPassword(dto.password());
 
             if (dto.permissions() != null) {
                 if (!checkPermission(dto.permissions())) {
@@ -109,10 +109,10 @@ public class UserService implements UserAbs {
                 dto.permissions().forEach(perm -> {
                     permissionRepository.findByTitle(perm).ifPresent(userPerms::add);
                 });
-                user.setPermissions(userPerms);
+                SUser.setPermissions(userPerms);
             }
 
-            userRepository.save(user);
+            userRepository.save(SUser);
             return new ServiceResponse(200, new Message("User updated successfully!"));
 
         }).orElseGet(() -> new ServiceResponse(404, new Message("User does not exist")));
