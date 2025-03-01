@@ -11,6 +11,7 @@ import dj.nwp.sofar.service.abstraction.UserAbs;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -23,6 +24,7 @@ public class UserService implements UserAbs {
 
     private final UserRepository userRepository;
     private final PermissionRepository permissionRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -57,7 +59,7 @@ public class UserService implements UserAbs {
         SUser.setEmail(dto.email());
         SUser.setFirstName(dto.firstName());
         SUser.setLastName(dto.lastName());
-        SUser.setPassword(dto.password());
+        SUser.setPassword(passwordEncoder.encode(dto.password()));
 
         Set<Permission> userPerms = new HashSet<>();
 

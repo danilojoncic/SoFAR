@@ -1,5 +1,16 @@
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "black@black.com",
+  "password": "pass"
+}
+
+###
 POST http://localhost:8080/user/create
 Content-Type: application/json
+Authorization: Bearer:   eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fRURJVCIsIkNBTl9WSUVXIiwiQ0FOX0RFTEVURSIsIkNBTl9DUkVBVEUiXSwic3ViIjoiYmxhY2tAYmxhY2suY29tIiwiaWF0IjoxNzQwNzk1MTIwLCJleHAiOjE3NDk0MzUxMjB9.8v4ETdPfbqd12YC2y02QczRCeGtu6AiSfQYljEUJ4X4
+
 
 {
   "firstName": "Pera",
@@ -14,6 +25,8 @@ Content-Type: application/json
 ###
 GET http://localhost:8080/user
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fRURJVCIsIkNBTl9WSUVXIiwiQ0FOX0RFTEVURSIsIkNBTl9DUkVBVEUiXSwic3ViIjoiYmxhY2tAYmxhY2suY29tIiwiaWF0IjoxNzQwNzk1MTIwLCJleHAiOjE3NDk0MzUxMjB9.8v4ETdPfbqd12YC2y02QczRCeGtu6AiSfQYljEUJ4X4
+
 
 ###
 DELETE http://localhost:8080/user/delete/1
