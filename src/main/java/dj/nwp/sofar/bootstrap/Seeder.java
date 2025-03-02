@@ -27,8 +27,14 @@ public class Seeder implements CommandLineRunner {
         Permission p2 = new Permission("CAN_EDIT");
         Permission p3 = new Permission("CAN_DELETE");
         Permission p4 = new Permission("CAN_CREATE");
+        //EARCH, PLACE_ORDER, CANCEL, TRACK, SCHEDULE
+        Permission p5 = new Permission("CAN_SEARCH_ORDER");
+        Permission p6 = new Permission("CAN_PLACE_ORDER");
+        Permission p7 = new Permission("CAN_CANCEL_ORDER");
+        Permission p8 = new Permission("CAN_TRACK_ORDER");
+        Permission p9 = new Permission("CAN_SCHEDULE_ORDER");
         List<Permission> permissions = List.of(
-            p1,p2,p3,p4
+            p1,p2,p3,p4,p5,p6,p7,p8,p9
         );
         permissionRepository.saveAll(permissions);
 
