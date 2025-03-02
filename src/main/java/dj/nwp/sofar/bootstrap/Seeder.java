@@ -48,7 +48,7 @@ public class Seeder implements CommandLineRunner {
                 "Blackadder",
                 "black@black.com",
                 "pass",
-                List.of(p1.getTitle(),p2.getTitle(),p3.getTitle(),p4.getTitle())
+                List.of(p1.getTitle(),p2.getTitle(),p3.getTitle(),p4.getTitle(),p5.getTitle(),p6.getTitle(),p7.getTitle(),p8.getTitle(),p9.getTitle())
         );
 
 

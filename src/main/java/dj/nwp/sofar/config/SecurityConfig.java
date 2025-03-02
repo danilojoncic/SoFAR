@@ -45,6 +45,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/dish/edit/").hasAuthority("CAN_EDIT")
                         .requestMatchers(HttpMethod.DELETE, "/dish/delete/*").hasAuthority("CAN_DELETE")
 
+                        .requestMatchers(HttpMethod.POST, "/order/place").hasAuthority("CAN_PLACE_ORDER")
+
+
                         .requestMatchers(HttpMethod.POST, "/user").hasAuthority("CAN_CREATE")
                         .requestMatchers(HttpMethod.GET, "/user").hasAnyAuthority("CAN_VIEW")
                         .requestMatchers(HttpMethod.GET, "/user/*").hasAnyAuthority("CAN_VIEW")
