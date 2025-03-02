@@ -23,7 +23,7 @@ Authorization: Bearer:   eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fRURJVC
 }
 
 ###
-GET http://localhost:8080/user
+GET http://localhost:8080/dish
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fRURJVCIsIkNBTl9WSUVXIiwiQ0FOX0RFTEVURSIsIkNBTl9DUkVBVEUiXSwic3ViIjoiYmxhY2tAYmxhY2suY29tIiwiaWF0IjoxNzQwNzk1MTIwLCJleHAiOjE3NDk0MzUxMjB9.8v4ETdPfbqd12YC2y02QczRCeGtu6AiSfQYljEUJ4X4
 
@@ -34,3 +34,6 @@ Accept: application/json
 
 ###
 
+
+GET http://localhost:8080/dish
+Accept: application/json
