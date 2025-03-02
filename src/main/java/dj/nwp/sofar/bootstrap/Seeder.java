@@ -1,8 +1,11 @@
 package dj.nwp.sofar.bootstrap;
 
+import dj.nwp.sofar.dto.DishOperation;
 import dj.nwp.sofar.dto.UserOperation;
 import dj.nwp.sofar.model.Permission;
+import dj.nwp.sofar.repository.DishRepository;
 import dj.nwp.sofar.repository.PermissionRepository;
+import dj.nwp.sofar.service.DishService;
 import dj.nwp.sofar.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -14,10 +17,12 @@ public class Seeder implements CommandLineRunner {
 
     private final UserService userService;
     private final PermissionRepository permissionRepository;
+    private final DishService dishService;
 
-    public Seeder(UserService userService, PermissionRepository permissionRepository) {
+    public Seeder(UserService userService, PermissionRepository permissionRepository, DishService dishService) {
         this.userService = userService;
         this.permissionRepository = permissionRepository;
+        this.dishService = dishService;
     }
 
     @Override
@@ -68,5 +73,14 @@ public class Seeder implements CommandLineRunner {
         userService.createUser(u3);
 
 
+        DishOperation d1 = new DishOperation("Sathee","You take a rat, drown it in a big puddle then you marinte it in the same puddle, one of Baldrick's specialties");
+        DishOperation d2 = new DishOperation("Fricassee","Same sa Sathee but just a slightly larger rat");
+        DishOperation d3 = new DishOperation("Pigeon","Freshly shot carrier pigeon, high possibility of carrying General Melchet's orders (possibly to certain death)");
+        DishOperation d4 = new DishOperation("Breakfast Buffet","General Melchet's buffet, enough food to feed a hungry trench for a week");
+
+        dishService.createDish(d1);
+        dishService.createDish(d2);
+        dishService.createDish(d3);
+        dishService.createDish(d4);
     }
 }

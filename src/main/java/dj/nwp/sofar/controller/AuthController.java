@@ -3,6 +3,7 @@ package dj.nwp.sofar.controller;
 import dj.nwp.sofar.dto.LoginRequest;
 import dj.nwp.sofar.dto.ServiceResponse;
 import dj.nwp.sofar.service.LoginService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ public class AuthController {
     private final LoginService loginService;
 
     @PostMapping("/login")
-    ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest) {
         ServiceResponse sr = loginService.login(loginRequest);
         return ResponseEntity.status(sr.code()).body(sr.content());
     }
