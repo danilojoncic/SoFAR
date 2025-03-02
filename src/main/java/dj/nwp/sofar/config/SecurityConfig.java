@@ -30,7 +30,8 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
             "/auth/login",
-            "/actuator/health"
+            "/actuator/health",
+            "/routes"
     };
 
     @Bean
@@ -40,6 +41,10 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(WHITE_LIST_URL).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/dish/create").hasAuthority("CAN_CREATE")
+                        .requestMatchers(HttpMethod.POST, "/dish/edit/").hasAuthority("CAN_EDIT")
+                        .requestMatchers(HttpMethod.DELETE, "/dish/delete/*").hasAuthority("CAN_DELETE")
+
                         .requestMatchers(HttpMethod.POST, "/user").hasAuthority("CAN_CREATE")
                         .requestMatchers(HttpMethod.GET, "/user").hasAnyAuthority("CAN_VIEW")
                         .requestMatchers(HttpMethod.GET, "/user/*").hasAnyAuthority("CAN_VIEW")
