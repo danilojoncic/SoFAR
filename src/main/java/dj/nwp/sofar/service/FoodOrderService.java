@@ -15,6 +15,7 @@ import org.hibernate.query.Order;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,14 +75,26 @@ public class FoodOrderService implements FoodOrderAbs {
         if(!userRepository.existsByEmail(email))return new ServiceResponse(401,new Message("User does not exist"));
         //an admin is a user that has all 9 permissions ;)
         if(perms.size() != 9){
-            return new ServiceResponse(200,foodOrderRepository.findFoodOrdersByCreatedBy_Email(email));
+            return new ServiceResponse(200,entityToPresentation(foodOrderRepository.findFoodOrdersByCreatedBy_Email(email)));
         }else{
-            return new ServiceResponse(200,foodOrderRepository.findAll());
+            return new ServiceResponse(200,entityToPresentation(foodOrderRepository.findAll()));
         }
     }
 
-
-
+    private List<OrderPresentation> entityToPresentation(List<FoodOrder> entityList){
+        List<OrderPresentation> presentationList = new ArrayList<>();
+        entityList.forEach(entity -> {
+            presentationList.add(new OrderPresentation(
+                    entity.getId(),
+                    entity.getCreatedBy().getEmail(),
+                    entity.getItems(),
+                    entity.getStatus().name(),
+                    entity.getScheduleDate(),
+                    entity.getActive()
+            ));
+        });
+        return presentationList;
+    }
 
 
     private boolean checkDishList(List<String> dishes) {
