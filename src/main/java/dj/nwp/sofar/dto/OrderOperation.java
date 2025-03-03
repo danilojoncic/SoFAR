@@ -7,8 +7,6 @@ import java.util.List;
 
 public record OrderOperation(
         @NotNull
-        String email,
-        @NotNull
         List<String> dishes
 ) {
 }
