@@ -3,6 +3,7 @@ package dj.nwp.sofar.dto;
 import dj.nwp.sofar.model.Dish;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record OrderPresentation(
@@ -10,7 +11,7 @@ public record OrderPresentation(
         String email,
         List<Dish> items,
         String orderStatus,
-        LocalDate scheduledAt,
+        LocalDateTime scheduledAt,
         boolean active
 ) {
 }

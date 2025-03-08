@@ -44,4 +44,18 @@ public class OrderController {
         return ResponseEntity.status(sr.code()).body(sr.content());
     }
 
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<?> cancelOrder(@PathVariable Long id, Authentication authentication) {
+        if (authentication == null || authentication.getAuthorities() == null) {
+            return ResponseEntity.status(401).body("Unauthorized: No authentication found");
+        }
+        List<String> auths = new ArrayList<>();
+        authentication.getAuthorities().forEach(authority -> {
+            auths.add(authority.toString());});
+        ServiceResponse sr = foodOrderService.cancelOrder(id,new AuthComponents(authentication.getName(), auths));
+        return ResponseEntity.status(sr.code()).body(sr.content());
+    }
+
+
+
 }

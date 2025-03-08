@@ -43,7 +43,11 @@ public class SecurityConfig {
 
 
                         .requestMatchers(WHITE_LIST_URL).permitAll()
+
+                        .requestMatchers(HttpMethod.GET,"/error/**").hasAuthority("CAN_VIEW")
+
                         .requestMatchers(HttpMethod.POST, "/order/**").hasAuthority("CAN_PLACE_ORDER")
+                        .requestMatchers(HttpMethod.PUT, "/order/cancel/**").hasAuthority("CAN_CANCEL_ORDER")
 
                         .requestMatchers(HttpMethod.POST, "/dish/create").hasAuthority("CAN_CREATE")
                         .requestMatchers(HttpMethod.POST, "/dish/edit/").hasAuthority("CAN_EDIT")

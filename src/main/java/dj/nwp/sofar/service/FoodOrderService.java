@@ -7,14 +7,17 @@ import dj.nwp.sofar.model.FoodOrder;
 import dj.nwp.sofar.model.SUser;
 import dj.nwp.sofar.model.Status;
 import dj.nwp.sofar.repository.DishRepository;
+import dj.nwp.sofar.repository.ErrorMessageRepository;
 import dj.nwp.sofar.repository.FoodOrderRepository;
 import dj.nwp.sofar.repository.UserRepository;
 import dj.nwp.sofar.service.abstraction.FoodOrderAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Order;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,7 @@ public class FoodOrderService implements FoodOrderAbs {
     private final FoodOrderRepository foodOrderRepository;
     private final UserRepository userRepository;
     private final DishRepository dishRepository;
+    private final ErrorMessageRepository errorMessageRepository;
 
 
     @Override
@@ -32,6 +36,7 @@ public class FoodOrderService implements FoodOrderAbs {
     }
 
     @Override
+    @Transactional
     public ServiceResponse placeOrder(OrderOperation dto,AuthComponents auth) {
         String email = auth.name();
         if(!checkDishList(dto.dishes()))
@@ -43,7 +48,7 @@ public class FoodOrderService implements FoodOrderAbs {
         FoodOrder foodOrder = new FoodOrder(
                 Status.ORDERED,
                 true,
-                LocalDate.now(),
+                LocalDateTime.now(),
                 user,
                 dishList
         );
@@ -52,10 +57,33 @@ public class FoodOrderService implements FoodOrderAbs {
     }
 
     @Override
+    @Transactional
     public ServiceResponse cancelOrder(Long id, AuthComponents auth) {
+        FoodOrder order = foodOrderRepository.findById(id).orElse(null);
+        if (order == null) {
+            return new ServiceResponse(404, new Message("Order does not exist"));
+        }
 
-        return null;
+        SUser user = userRepository.findByEmail(auth.name()).orElse(null);
+        if (user == null) {
+            return new ServiceResponse(401, new Message("User does not exist"));
+        }
+
+        boolean isAdmin = auth.authorities().size() == 9;
+
+        if (!isAdmin && !order.getCreatedBy().getEmail().equals(auth.name())) {
+            return new ServiceResponse(403, new Message("You cannot cancel someone else's order"));
+        }
+
+        if (order.getStatus() != Status.ORDERED) {
+            return new ServiceResponse(400, new Message("Only orders with status ORDERED can be canceled"));
+        }
+
+        order.setStatus(Status.CANCELED);
+        foodOrderRepository.save(order);
+        return new ServiceResponse(201, new Message("Order successfully canceled"));
     }
+
 
     @Override
     public ServiceResponse trackOrder(Long id, AuthComponents auth) {
@@ -64,6 +92,7 @@ public class FoodOrderService implements FoodOrderAbs {
 
     @Override
     public ServiceResponse scheduleOrder(OrderSchedule dto) {
+
         return null;
     }
 
@@ -89,7 +118,7 @@ public class FoodOrderService implements FoodOrderAbs {
                     entity.getCreatedBy().getEmail(),
                     entity.getItems(),
                     entity.getStatus().name(),
-                    entity.getScheduleDate(),
+                    entity.getScheduleDateTime(),
                     entity.getActive()
             ));
         });
