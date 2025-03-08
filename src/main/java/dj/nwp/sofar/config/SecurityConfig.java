@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -24,6 +25,7 @@ import java.util.List;
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
+@EnableScheduling
 public class SecurityConfig {
     private final JWTFilter jwtFilter;
     private final CustomUserDetailsService userDetailsService;
@@ -47,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/error/**").hasAuthority("CAN_VIEW")
 
                         .requestMatchers(HttpMethod.POST, "/order/**").hasAuthority("CAN_PLACE_ORDER")
+                        .requestMatchers(HttpMethod.GET,"/order/search/**").hasAuthority("CAN_SEARCH_ORDER")
                         .requestMatchers(HttpMethod.PUT, "/order/cancel/**").hasAuthority("CAN_CANCEL_ORDER")
 
                         .requestMatchers(HttpMethod.POST, "/dish/create").hasAuthority("CAN_CREATE")

@@ -11,6 +11,8 @@ import dj.nwp.sofar.service.abstraction.FoodOrderAbs;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Order;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,11 +27,114 @@ public class FoodOrderService implements FoodOrderAbs {
     private final UserRepository userRepository;
     private final DishRepository dishRepository;
     private final ErrorMessageRepository errorMessageRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
 
     @Override
-    public ServiceResponse searchOrder(Long id, List<Status> status, LocalDate dateTo, LocalDate dateFrom, AuthComponents auth) {
-        return null;
+    public ServiceResponse searchOrder(Long userId, List<Status> status, LocalDateTime dateFrom, LocalDateTime dateTo, AuthComponents auth) {
+        String email = auth.name();
+        boolean isAdmin = auth.authorities().size() == 9;
+
+        if (!userRepository.existsByEmail(email)) {
+            return new ServiceResponse(401, new Message("User does not exist"));
+        }
+
+        List<FoodOrder> orders;
+
+        if (!isAdmin) {
+            // Regular user can only see their own orders
+            if (dateFrom != null && dateTo != null && status != null) {
+                orders = foodOrderRepository.findFoodOrdersByCreatedByIdAndStatusInAndScheduleDateTimeIsBetween(
+                        userRepository.findByEmail(email).get().getId(), status, dateFrom, dateTo);
+            } else if (dateFrom != null && dateTo != null) {
+                orders = foodOrderRepository.findFoodOrdersByCreatedBy_IdAndScheduleDateTimeIsBetween(
+                        userRepository.findByEmail(email).get().getId(), dateFrom, dateTo);
+            } else if (status != null) {
+                orders = foodOrderRepository.findFoodOrdersByCreatedBy_IdAndStatusIn(
+                        userRepository.findByEmail(email).get().getId(), status);
+            } else {
+                orders = foodOrderRepository.findFoodOrdersByCreatedBy_Email(email);
+            }
+        } else {
+            // Admin can filter by userId or see all orders
+            if (userId != null) {
+                if (dateFrom != null && dateTo != null && status != null) {
+                    orders = foodOrderRepository.findFoodOrdersByCreatedByIdAndStatusInAndScheduleDateTimeIsBetween(
+                            userId, status, dateFrom, dateTo);
+                } else if (dateFrom != null && dateTo != null) {
+                    orders = foodOrderRepository.findFoodOrdersByCreatedBy_IdAndScheduleDateTimeIsBetween(
+                            userId, dateFrom, dateTo);
+                } else if (status != null) {
+                    orders = foodOrderRepository.findFoodOrdersByCreatedBy_IdAndStatusIn(userId, status);
+                } else {
+                    orders = foodOrderRepository.findFoodOrdersByCreatedBy_Id(userId);
+                }
+            } else {
+                if (dateFrom != null && dateTo != null && status != null) {
+                    orders = foodOrderRepository.findFoodOrdersByStatusInAndScheduleDateTimeIsBetween(status, dateFrom, dateTo);
+                } else if (dateFrom != null && dateTo != null) {
+                    orders = foodOrderRepository.findFoodOrdersByScheduleDateTimeIsBetween(dateFrom, dateTo);
+                } else if (status != null) {
+                    orders = foodOrderRepository.findFoodOrdersByStatusIn(status);
+                } else {
+                    orders = foodOrderRepository.findAll();
+                }
+            }
+        }
+
+        return new ServiceResponse(200, entityToPresentation(orders));
+    }
+
+
+    @Transactional
+    public void updateOrderStatus(FoodOrder foodOrder,Status newStatus) {
+        foodOrder.setStatus(newStatus);
+        foodOrderRepository.save(foodOrder);
+        messagingTemplate.convertAndSend("/tracker/order-status/" + foodOrder.getId(), foodOrder);
+    }
+
+
+
+
+    private boolean canPlaceNewOrder() {
+        long activeOrders = foodOrderRepository.countFoodOrderByStatusIn(List.of(Status.PREPARING, Status.IN_DELIVERY));
+        return activeOrders < 3;
+    }
+
+    @Scheduled(fixedRate = 5000)
+    @Transactional
+    public void processOrders() {
+        System.out.println("SCHEDULE CHECK!");
+        if(foodOrderRepository.count() == 0)return;
+        List<FoodOrder> orders = foodOrderRepository.findFoodOrdersByStatusIn(List.of(Status.ORDERED, Status.PREPARING, Status.IN_DELIVERY));
+        LocalDateTime now = LocalDateTime.now();
+
+        orders.forEach(order -> {
+            switch (order.getStatus()) {
+                case ORDERED -> {
+                    if (order.getScheduleDateTime().plusSeconds(10).isBefore(now)) {
+                        updateOrderStatus(order,Status.PREPARING);
+                    }
+                }
+                case PREPARING -> {
+                    if (order.getScheduleDateTime().plusSeconds(15).isBefore(now)) {
+                        updateOrderStatus(order,Status.IN_DELIVERY);
+                    }
+                }
+                case IN_DELIVERY -> {
+                    if (order.getScheduleDateTime().plusSeconds(20).isBefore(now)) {
+                        updateOrderStatus(order,Status.DELIVERED);
+                    }
+                }
+                //go in a cercle :) (yes cercle...)
+                case SCHEDULED -> {
+                    if(order.getScheduleDateTime().isBefore(now)){
+                        updateOrderStatus(order,Status.ORDERED);
+                    }
+                }
+            }
+        });
+        foodOrderRepository.saveAll(orders);
     }
 
     @Override
@@ -40,6 +145,12 @@ public class FoodOrderService implements FoodOrderAbs {
             return new ServiceResponse(401,new Message("Invalid dish in order"));
         if(!checkEmail(email))
             return new ServiceResponse(401,new Message("Invalid user email"));
+        if(!canPlaceNewOrder()){
+            return new ServiceResponse(401,new Message("Order cannot be placed"));
+        }
+
+
+
         SUser user = userRepository.findByEmail(email).get();
         List<Dish> dishList = dishRepository.findByTitleIn(dto.dishes());
         FoodOrder foodOrder = new FoodOrder(
@@ -76,16 +187,10 @@ public class FoodOrderService implements FoodOrderAbs {
             return new ServiceResponse(400, new Message("Only orders with status ORDERED can be canceled"));
         }
 
-        order.setStatus(Status.CANCELED);
-        foodOrderRepository.save(order);
+        updateOrderStatus(order,Status.CANCELED);
         return new ServiceResponse(201, new Message("Order successfully canceled"));
     }
 
-
-    @Override
-    public ServiceResponse trackOrder(Long id, AuthComponents auth) {
-        return null;
-    }
 
     @Override
     @Transactional

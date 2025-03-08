@@ -11,6 +11,7 @@ import java.util.List;
 public interface FoodOrderRepository extends JpaRepository<FoodOrder, Long> {
     List<FoodOrder> findFoodOrdersByCreatedBy_Email(String email);
     int countFoodOrderByStatus(Status status);
+    int countFoodOrderByStatusIn(List<Status> statuses);
     List<FoodOrder> findFoodOrdersByCreatedBy_Id(Long id);
     List<FoodOrder> findFoodOrdersByCreatedBy_IdAndStatusIn(Long id, List<Status> status);
     List<FoodOrder> findFoodOrdersByCreatedBy_IdAndScheduleDateTimeIsBetween(Long id, LocalDateTime dateFrom, LocalDateTime dateTo);
