@@ -129,6 +129,7 @@ public class FoodOrderService implements FoodOrderAbs {
                 //go in a cercle :) (yes cercle...)
                 case SCHEDULED -> {
                     if(order.getScheduleDateTime().isBefore(now)){
+                        order.setActive(true);
                         updateOrderStatus(order,Status.ORDERED);
                     }
                 }
@@ -199,7 +200,7 @@ public class FoodOrderService implements FoodOrderAbs {
         if(!userRepository.existsByEmail(email)) return new ServiceResponse(404,new Message("User does not exist!"));
         SUser user = userRepository.findByEmail(email).get();
 
-        FoodOrder foodOrder = new FoodOrder(Status.SCHEDULED,true,dto.scheduleDateTime(),user,dishRepository.findByTitleIn(dto.dishes()));
+        FoodOrder foodOrder = new FoodOrder(Status.SCHEDULED,false,dto.scheduleDateTime(),user,dishRepository.findByTitleIn(dto.dishes()));
         if(foodOrderRepository.countFoodOrderByStatus(Status.SCHEDULED) > 3){
             ErrorMessage errorMessage = new ErrorMessage();
 
