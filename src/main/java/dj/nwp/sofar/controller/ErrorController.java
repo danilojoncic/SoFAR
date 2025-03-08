@@ -1,11 +1,15 @@
 package dj.nwp.sofar.controller;
 
+import dj.nwp.sofar.dto.AuthComponents;
 import dj.nwp.sofar.dto.ServiceResponse;
 import dj.nwp.sofar.service.ErrorMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/error")
@@ -26,13 +30,22 @@ public class ErrorController {
         if (authentication == null || authentication.getAuthorities() == null) {
             return ResponseEntity.status(401).body("Unauthorized: No authentication found");
         }
-        ServiceResponse sr = errorMessageService.getAllErrorMessagesFromOneUser(authentication.getName());
+        List<String> auths = new ArrayList<>();
+        authentication.getAuthorities().forEach(authority -> {
+            auths.add(authority.toString());});
+        ServiceResponse sr = errorMessageService.getAllErrorMessagesFromOneUser(authentication.getName(),new AuthComponents(authentication.getName(), auths));
         return ResponseEntity.status(sr.code()).body(sr.content());
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<?> getEmailError(@PathVariable String email) {
-        ServiceResponse sr = errorMessageService.getAllErrorMessagesFromOneUser(email);
+    public ResponseEntity<?> getEmailError(@PathVariable String email,Authentication authentication) {
+        if (authentication == null || authentication.getAuthorities() == null) {
+            return ResponseEntity.status(401).body("Unauthorized: No authentication found");
+        }
+        List<String> auths = new ArrayList<>();
+        authentication.getAuthorities().forEach(authority -> {
+            auths.add(authority.toString());});
+        ServiceResponse sr = errorMessageService.getAllErrorMessagesFromOneUser(email,new AuthComponents(authentication.getName(), auths));
         return ResponseEntity.status(sr.code()).body(sr.content());
     }
 

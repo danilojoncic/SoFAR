@@ -1,5 +1,6 @@
 package dj.nwp.sofar.service;
 
+import dj.nwp.sofar.dto.AuthComponents;
 import dj.nwp.sofar.dto.Message;
 import dj.nwp.sofar.dto.ServiceResponse;
 import dj.nwp.sofar.repository.ErrorMessageRepository;
@@ -30,7 +31,10 @@ public class ErrorMessageService implements ErrorMessageAbs {
     }
 
     @Override
-    public ServiceResponse getAllErrorMessagesFromOneUser(String email) {
+    public ServiceResponse getAllErrorMessagesFromOneUser(String email, AuthComponents auth) {
+        if(auth.authorities().size() == 9){
+            return new ServiceResponse(200,errorMessageRepository.findAll());
+        }
         if(!userRepository.existsByEmail(email))return new ServiceResponse(404,new Message("User does not exist!"));
         return new ServiceResponse(200,errorMessageRepository.findErrorMessagesByFoodOrder_CreatedBy_Email(email));
     }
