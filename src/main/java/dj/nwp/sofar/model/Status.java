@@ -5,5 +5,7 @@ public enum Status {
     PREPARING,
     IN_DELIVERY,
     DELIVERED,
-    CANCELED
+    CANCELED,
+    //lets be smart
+    SCHEDULED
 }

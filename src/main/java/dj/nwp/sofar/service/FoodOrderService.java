@@ -2,10 +2,7 @@ package dj.nwp.sofar.service;
 
 import dj.nwp.sofar.config.JWTUtil;
 import dj.nwp.sofar.dto.*;
-import dj.nwp.sofar.model.Dish;
-import dj.nwp.sofar.model.FoodOrder;
-import dj.nwp.sofar.model.SUser;
-import dj.nwp.sofar.model.Status;
+import dj.nwp.sofar.model.*;
 import dj.nwp.sofar.repository.DishRepository;
 import dj.nwp.sofar.repository.ErrorMessageRepository;
 import dj.nwp.sofar.repository.FoodOrderRepository;
@@ -91,9 +88,27 @@ public class FoodOrderService implements FoodOrderAbs {
     }
 
     @Override
-    public ServiceResponse scheduleOrder(OrderSchedule dto) {
+    public ServiceResponse scheduleOrder(OrderSchedule dto, AuthComponents auth) {
+        String email = auth.name();
+        if(!userRepository.existsByEmail(email)) return new ServiceResponse(404,new Message("User does not exist!"));
+        SUser user = userRepository.findByEmail(email).get();
 
-        return null;
+        FoodOrder foodOrder = new FoodOrder(Status.SCHEDULED,true,dto.scheduleDateTime(),user,dishRepository.findByTitleIn(dto.dishes()));
+        if(foodOrderRepository.countFoodOrderByStatus(Status.SCHEDULED) > 3){
+            ErrorMessage errorMessage = new ErrorMessage();
+
+            foodOrder.setStatus(Status.CANCELED);
+
+            errorMessage.setFoodOrder(foodOrder);
+            errorMessage.setOperation("SCHEDULING ERROR");
+            errorMessage.setDescription("TOO MANY SCHEDULED ORDERS AT THIS TIME");
+            errorMessage.setTimestamp(LocalDateTime.now());
+            errorMessageRepository.save(errorMessage);
+            foodOrderRepository.save(foodOrder);
+            return new ServiceResponse(401, new Message("Scheduling ERROR, too many scheduled orders"));
+        }
+        foodOrderRepository.save(foodOrder);
+        return new ServiceResponse(201,new Message("Order has been scheduled at: " + dto.scheduleDateTime()));
     }
 
     @Override

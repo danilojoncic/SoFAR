@@ -18,7 +18,7 @@ public interface FoodOrderAbs {
     //uses websockets
     ServiceResponse trackOrder(Long id, AuthComponents auth);
     /// TODO add creation dto
-    ServiceResponse scheduleOrder(OrderSchedule dto);
+    ServiceResponse scheduleOrder(OrderSchedule dto,AuthComponents auth);
     ServiceResponse getAllOrders( AuthComponents auth);
 
 

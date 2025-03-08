@@ -8,8 +8,6 @@ import java.util.List;
 
 public record OrderSchedule(
         @NotNull
-        String email,
-        @NotNull
         List<String> dishes,
         @NotNull
         LocalDateTime scheduleDateTime
