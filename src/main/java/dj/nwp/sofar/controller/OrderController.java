@@ -66,7 +66,7 @@ public class OrderController {
         List<String> auths = new ArrayList<>();
         authentication.getAuthorities().forEach(authority -> {
             auths.add(authority.toString());});
-        ServiceResponse sr = foodOrderService.placeOrder(dto,new AuthComponents(authentication.getName(), auths));
+        ServiceResponse sr = foodOrderService.scheduleOrder(dto,new AuthComponents(authentication.getName(), auths));
         return ResponseEntity.status(sr.code()).body(sr.content());
     }
 

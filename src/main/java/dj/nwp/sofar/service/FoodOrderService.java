@@ -88,6 +88,7 @@ public class FoodOrderService implements FoodOrderAbs {
     }
 
     @Override
+    @Transactional
     public ServiceResponse scheduleOrder(OrderSchedule dto, AuthComponents auth) {
         String email = auth.name();
         if(!userRepository.existsByEmail(email)) return new ServiceResponse(404,new Message("User does not exist!"));
@@ -112,6 +113,7 @@ public class FoodOrderService implements FoodOrderAbs {
     }
 
     @Override
+    @Transactional
     public ServiceResponse getAllOrders(AuthComponents auth) {
         List<String> perms = auth.authorities();
         String email = auth.name();
