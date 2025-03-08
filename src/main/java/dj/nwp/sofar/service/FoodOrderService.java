@@ -28,7 +28,7 @@ public class FoodOrderService implements FoodOrderAbs {
 
 
     @Override
-    public ServiceResponse searchOrder(Long id, List<String> status, LocalDate dateTo, LocalDate dateFrom, AuthComponents auth) {
+    public ServiceResponse searchOrder(Long id, List<Status> status, LocalDate dateTo, LocalDate dateFrom, AuthComponents auth) {
         return null;
     }
 

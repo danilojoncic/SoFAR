@@ -4,6 +4,7 @@ import dj.nwp.sofar.dto.AuthComponents;
 import dj.nwp.sofar.dto.OrderOperation;
 import dj.nwp.sofar.dto.OrderSchedule;
 import dj.nwp.sofar.dto.ServiceResponse;
+import dj.nwp.sofar.model.Status;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface FoodOrderAbs {
 
     /// TODO add search criteria
-    ServiceResponse searchOrder(Long id, List<String> status, LocalDate dateTo, LocalDate dateFrom, AuthComponents auth);
+    ServiceResponse searchOrder(Long id, List<Status> status, LocalDate dateTo, LocalDate dateFrom, AuthComponents auth);
     /// TODO add creation dto
     ServiceResponse placeOrder(OrderOperation dto, AuthComponents auth);
     ServiceResponse cancelOrder(Long id, AuthComponents auth);
