@@ -17,7 +17,6 @@ public interface FoodOrderAbs {
     /// TODO add creation dto
     ServiceResponse placeOrder(OrderOperation dto, AuthComponents auth);
     ServiceResponse cancelOrder(Long id, AuthComponents auth);
-    //uses websockets
     /// TODO add creation dto
     ServiceResponse scheduleOrder(OrderSchedule dto,AuthComponents auth);
     ServiceResponse getAllOrders( AuthComponents auth);
