@@ -104,7 +104,7 @@ public class FoodOrderService implements FoodOrderAbs {
     @Scheduled(fixedRate = 5000)
     @Transactional
     public void processOrders() {
-        System.out.println("SCHEDULE CHECK!");
+        //System.out.println("SCHEDULE CHECK!");
         if(foodOrderRepository.count() == 0)return;
         List<FoodOrder> orders = foodOrderRepository.findFoodOrdersByStatusIn(List.of(Status.ORDERED, Status.PREPARING, Status.IN_DELIVERY));
         LocalDateTime now = LocalDateTime.now();
