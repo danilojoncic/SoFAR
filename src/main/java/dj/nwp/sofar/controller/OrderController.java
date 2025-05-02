@@ -91,6 +91,14 @@ public class OrderController {
     }
 
 
+    //for testing purposes only
+    @GetMapping("/track/ping/{id}")
+    public ResponseEntity<?> trackPing(@PathVariable Long id) {
+        ServiceResponse sr = foodOrderService.trackPing(id);
+        return ResponseEntity.status(sr.code()).body(sr.content());
+    }
+
+
 
 
 }

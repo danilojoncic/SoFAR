@@ -258,4 +258,15 @@ public class FoodOrderService implements FoodOrderAbs {
         return userRepository.existsByEmail(email);
     }
 
+    @Override
+    public ServiceResponse trackPing(Long id){
+        if(foodOrderRepository.findById(id).isEmpty()){
+            return new ServiceResponse(404,new Message("Order does not exist"));
+        }
+        FoodOrder foodOrder = foodOrderRepository.findById(id).get();
+        String status = foodOrder.getStatus().name();
+        return new ServiceResponse(200, new Message(status));
+    }
+
+
 }
