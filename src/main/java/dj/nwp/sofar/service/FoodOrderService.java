@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class FoodOrderService implements FoodOrderAbs {
     private final DishRepository dishRepository;
     private final ErrorMessageRepository errorMessageRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final Logger logger = Logger.getLogger(FoodOrderService.class.getName());
 
 
     @Override
@@ -88,6 +90,7 @@ public class FoodOrderService implements FoodOrderAbs {
 
     @Transactional
     public void updateOrderStatus(FoodOrder foodOrder,Status newStatus) {
+        logger.info("Updating status for " + foodOrder.getId() + " to " + newStatus);
         foodOrder.setStatus(newStatus);
         foodOrderRepository.save(foodOrder);
         messagingTemplate.convertAndSend("/tracker/order-status/" + foodOrder.getId(), foodOrder);
@@ -104,7 +107,7 @@ public class FoodOrderService implements FoodOrderAbs {
     @Scheduled(fixedRate = 5000)
     @Transactional
     public void processOrders() {
-        System.out.println("SCHEDULE CHECK!");
+        logger.info("Processing orders");
         if(foodOrderRepository.count() == 0)return;
         List<FoodOrder> orders = foodOrderRepository.findFoodOrdersByStatusIn(List.of(Status.ORDERED, Status.PREPARING, Status.IN_DELIVERY));
         LocalDateTime now = LocalDateTime.now();
