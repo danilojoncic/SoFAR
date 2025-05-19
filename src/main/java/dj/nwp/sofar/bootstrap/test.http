@@ -1,3 +1,8 @@
+GET http://localhost:8080/order/track/ping/3
+
+Accept: application/json
+
+###
 GET http://localhost:8080/order
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fRURJVCIsIkNBTl9QTEFDRV9PUkRFUiIsIkNBTl9WSUVXIiwiQ0FOX0RFTEVURSIsIkNBTl9TRUFSQ0hfT1JERVIiLCJDQU5fQ1JFQVRFIl0sInN1YiI6ImRhcmxpbmdAY3B0LmNvbSIsImlhdCI6MTc0MDk1NTg0NywiZXhwIjoxNzQ5NTk1ODQ3fQ.8Qi4xQyMLQJbEITjoB-c2jGkIoQtNfiZ-LPqO-0etas
@@ -18,7 +23,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fRURJVCIsIkNBTl9QTEFDRV9PUkRFUiIsIkNBTl9WSUVXIiwiQ0FOX0RFTEVURSIsIkNBTl9TRUFSQ0hfT1JERVIiLCJDQU5fQ1JFQVRFIl0sInN1YiI6ImRhcmxpbmdAY3B0LmNvbSIsImlhdCI6MTc0MDk1NTg0NywiZXhwIjoxNzQ5NTk1ODQ3fQ.8Qi4xQyMLQJbEITjoB-c2jGkIoQtNfiZ-LPqO-0etas
 
 {
-  "dishes": ["Pigeon","meal2"]
+  "dishes": ["Pigeon","Sathee"]
 }
 
 ###
@@ -41,7 +46,7 @@ Authorization: Bearer: eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fRURJVCIs
   "email": "mejl2@gmail.com",
   "password": "sifrica",
   "permissions": [
-    "CAN_VIW"
+    "CAN_VIEW"
   ]
 }
 

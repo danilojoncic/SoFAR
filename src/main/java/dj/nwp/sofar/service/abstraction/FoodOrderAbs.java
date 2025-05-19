@@ -20,6 +20,7 @@ public interface FoodOrderAbs {
     /// TODO add creation dto
     ServiceResponse scheduleOrder(OrderSchedule dto,AuthComponents auth);
     ServiceResponse getAllOrders( AuthComponents auth);
+    ServiceResponse trackPing(Long id);
 
 
 }

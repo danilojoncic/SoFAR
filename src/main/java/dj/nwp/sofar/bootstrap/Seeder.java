@@ -27,7 +27,7 @@ public class Seeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
+        if(permissionRepository.count() != 0)return;
         /*
          * User that has all 9 permissions is considered an admin
          */

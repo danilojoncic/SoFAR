@@ -90,7 +90,6 @@ public class FoodOrderService implements FoodOrderAbs {
 
     @Transactional
     public void updateOrderStatus(FoodOrder foodOrder,Status newStatus) {
-        logger.info("Updating status for " + foodOrder.getId() + " to " + newStatus);
         foodOrder.setStatus(newStatus);
         foodOrderRepository.save(foodOrder);
         messagingTemplate.convertAndSend("/tracker/order-status/" + foodOrder.getId(), foodOrder);
@@ -260,5 +259,16 @@ public class FoodOrderService implements FoodOrderAbs {
     private boolean checkEmail(String email){
         return userRepository.existsByEmail(email);
     }
+
+    @Override
+    public ServiceResponse trackPing(Long id){
+        if(foodOrderRepository.findById(id).isEmpty()){
+            return new ServiceResponse(404,new Message("Order does not exist"));
+        }
+        FoodOrder foodOrder = foodOrderRepository.findById(id).get();
+        String status = foodOrder.getStatus().name();
+        return new ServiceResponse(200, new Message(status));
+    }
+
 
 }

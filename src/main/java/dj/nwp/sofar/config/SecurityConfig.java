@@ -33,7 +33,8 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
             "/auth/login",
             "/actuator/health",
-            "/routes"
+            "/routes",
+            "/order/track/ping/**"
     };
 
     @Bean
