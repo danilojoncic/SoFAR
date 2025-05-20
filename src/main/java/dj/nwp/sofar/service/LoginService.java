@@ -28,9 +28,9 @@ public class LoginService implements AuthAbs {
                 LoginResponse loginResponse = new LoginResponse(jwt);
                 return new ServiceResponse(200,loginResponse);
             }else{
-                return new ServiceResponse(401,new Message("Invalid email or password"));
+                return new ServiceResponse(401,new Message("Invalid credentials, (bad password ;) )"));
             }
         }
-        return null;
+        return new ServiceResponse(401,new Message("Bad credentials"));
     }
 }
