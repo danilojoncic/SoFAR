@@ -1,5 +1,6 @@
 package dj.nwp.sofar.mapper;
 
+import dj.nwp.sofar.dto.UserOperation;
 import dj.nwp.sofar.dto.UserPresentation;
 import dj.nwp.sofar.model.Permission;
 import dj.nwp.sofar.model.SUser;
@@ -20,6 +21,18 @@ public class UserMapper {
                 stringifyPermissions(user.getPermissions())
         );
     }
+
+    public static UserOperation UserToUserOperation(SUser user) {
+        return new UserOperation(
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPassword(),
+                stringifyPermissions(user.getPermissions())
+        );
+    }
+
+
 
 
 

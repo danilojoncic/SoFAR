@@ -52,7 +52,7 @@ public class UserService implements UserAbs {
     @Override
     public ServiceResponse getOneUserBy(Long id) {
         return userRepository.findById(id)
-                .map(SUser -> new ServiceResponse(200, SUser))
+                .map(SUser -> new ServiceResponse(200, UserMapper.UserToUserPresentation(SUser)))
                 .orElseGet(()->new ServiceResponse(404,new Message("User with id "+id+" does not exist")));
     }
 
