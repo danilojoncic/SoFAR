@@ -3,6 +3,8 @@ package dj.nwp.sofar.service;
 import dj.nwp.sofar.dto.Message;
 import dj.nwp.sofar.dto.ServiceResponse;
 import dj.nwp.sofar.dto.UserOperation;
+import dj.nwp.sofar.dto.UserPresentation;
+import dj.nwp.sofar.mapper.UserMapper;
 import dj.nwp.sofar.model.Permission;
 import dj.nwp.sofar.model.SUser;
 import dj.nwp.sofar.repository.PermissionRepository;
@@ -10,6 +12,7 @@ import dj.nwp.sofar.repository.UserRepository;
 import dj.nwp.sofar.service.abstraction.UserAbs;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,13 +32,21 @@ public class UserService implements UserAbs {
 
     @Override
     public ServiceResponse getUsers() {
-        return new ServiceResponse(200,userRepository.findAll());
+        return new ServiceResponse(
+                200,
+                userRepository.findAll()
+                        .stream()
+                        .map(UserMapper::UserToUserPresentation)
+                        .toList()
+        );
     }
 
     @Override
     public ServiceResponse getUsersPaginated(Integer page, Integer size) {
         PageRequest pg = PageRequest.of(page, size);
-        return new ServiceResponse(200,userRepository.findAll(pg));
+        Page<UserPresentation> result = userRepository.findAll(pg)
+                .map(UserMapper::UserToUserPresentation);
+        return new ServiceResponse(200, result);
     }
 
     @Override

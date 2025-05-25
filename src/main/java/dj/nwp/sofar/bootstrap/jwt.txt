@@ -18,3 +18,12 @@ dr@house.com
 dr
 LOW USER JWT
 eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fUExBQ0VfT1JERVIiLCJDQU5fVklFVyIsIkNBTl9UUkFDS19PUkRFUiIsIkNBTl9TQ0hFRFVMRV9PUkRFUiIsIkNBTl9TRUFSQ0hfT1JERVIiLCJDQU5fQ0FOQ0VMX09SREVSIl0sInN1YiI6ImRyQGhvdXNlLmNvbSIsImlhdCI6MTc0MDk1NTk3OCwiZXhwIjoxNzQ5NTk1OTc4fQ.HWH7d_nV3cLxCU6YqRByd4IazWalUecEfTTGxbYx84I
+
+NO USER CREDENTIALS
+UserOperation u5 = new UserOperation(
+                    "Tommy",
+                    "Poor old chap",
+                    "army@uk.com",
+                    "army",
+                    new ArrayList<>()
+            );

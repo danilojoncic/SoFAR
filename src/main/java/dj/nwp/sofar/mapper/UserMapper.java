@@ -11,8 +11,9 @@ import java.util.Set;
 
 @Component
 public class UserMapper {
-    public UserPresentation UserToUserPresentation(SUser user) {
+    public static UserPresentation UserToUserPresentation(SUser user) {
         return new UserPresentation(
+                user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
@@ -22,7 +23,7 @@ public class UserMapper {
 
 
 
-    private List<String> stringifyPermissions(Set<Permission> permissions) {
+    private static List<String> stringifyPermissions(Set<Permission> permissions) {
         List<String> permissionsList = new ArrayList<>();
         permissions.forEach(permission -> {
             permissionsList.add(permission.getTitle());

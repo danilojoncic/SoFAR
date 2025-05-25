@@ -10,6 +10,7 @@ import dj.nwp.sofar.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -82,11 +83,19 @@ public class Seeder implements CommandLineRunner {
                     List.of(p5.getTitle(), p6.getTitle(), p7.getTitle(), p8.getTitle(), p9.getTitle(), p1.getTitle())
             );
 
+            UserOperation u5 = new UserOperation(
+                    "Tommy",
+                    "Poor old chap",
+                    "army@uk.com",
+                    "army",
+                    new ArrayList<>()
+            );
+
             userService.createUser(u1);
             userService.createUser(u2);
             userService.createUser(u3);
             userService.createUser(u4);
-
+            userService.createUser(u5);
 
             DishOperation d1 = new DishOperation("Sathee", "You take a rat, drown it in a big puddle then you marinte it in the same puddle, one of Baldrick's specialties");
             DishOperation d2 = new DishOperation("Fricassee", "Same sa Sathee but just a slightly larger rat");

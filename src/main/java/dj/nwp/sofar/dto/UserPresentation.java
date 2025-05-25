@@ -6,6 +6,9 @@ import java.util.List;
 
 public record UserPresentation(
         @NotNull
+        Long id,
+
+        @NotNull
         String firstName,
 
         @NotNull
