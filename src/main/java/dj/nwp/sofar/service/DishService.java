@@ -5,6 +5,7 @@ import dj.nwp.sofar.dto.Message;
 import dj.nwp.sofar.dto.ServiceResponse;
 import dj.nwp.sofar.model.Dish;
 import dj.nwp.sofar.repository.DishRepository;
+import dj.nwp.sofar.repository.FoodOrderRepository;
 import dj.nwp.sofar.service.abstraction.DishAbs;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class DishService implements DishAbs {
     private final DishRepository dishRepository;
+    private final FoodOrderRepository orderRepository;
 
     @Override
     public ServiceResponse getOneDish(Long id) {
@@ -42,7 +44,10 @@ public class DishService implements DishAbs {
     public ServiceResponse deleteDish(Long id) {
         return dishRepository.findById(id)
                 .map(dish -> {
-                    dishRepository.findById(id);
+
+                    orderRepository.findFoodOrdersByItemsContaining(dish).forEach(order -> order.getItems().remove(dish));
+
+                    dishRepository.deleteById(id);
                     return new ServiceResponse(201,new Message("Dish deleted"));
                 })
                 .orElseGet(() -> new ServiceResponse(404,new Message("Dish does not exist!")));

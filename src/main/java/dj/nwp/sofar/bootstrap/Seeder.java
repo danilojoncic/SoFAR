@@ -39,7 +39,7 @@ public class Seeder implements CommandLineRunner {
             Permission p2 = new Permission("CAN_EDIT");
             Permission p3 = new Permission("CAN_DELETE");
             Permission p4 = new Permission("CAN_CREATE");
-            //EARCH, PLACE_ORDER, CANCEL, TRACK, SCHEDULE
+            //SEARCH, PLACE_ORDER, CANCEL, TRACK, SCHEDULE
             Permission p5 = new Permission("CAN_SEARCH_ORDER");
             Permission p6 = new Permission("CAN_PLACE_ORDER");
             Permission p7 = new Permission("CAN_CANCEL_ORDER");

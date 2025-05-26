@@ -24,7 +24,7 @@ public class FoodOrder {
 
     private LocalDateTime scheduleDateTime;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
     private SUser createdBy;
 
     @ManyToMany(fetch = FetchType.EAGER)

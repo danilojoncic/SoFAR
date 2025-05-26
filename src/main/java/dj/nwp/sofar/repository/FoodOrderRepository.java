@@ -1,5 +1,6 @@
 package dj.nwp.sofar.repository;
 
+import dj.nwp.sofar.model.Dish;
 import dj.nwp.sofar.model.FoodOrder;
 import dj.nwp.sofar.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,5 @@ public interface FoodOrderRepository extends JpaRepository<FoodOrder, Long> {
     List<FoodOrder> findFoodOrdersByStatusIn(List<Status> status);
     List<FoodOrder> findFoodOrdersByStatusInAndScheduleDateTimeIsBetween(List<Status> status, LocalDateTime dateFrom, LocalDateTime dateTo);
     List<FoodOrder> findFoodOrdersByScheduleDateTimeIsBetween(LocalDateTime dateFrom, LocalDateTime dateTo);
+    List<FoodOrder> findFoodOrdersByItemsContaining(Dish dish);
 }

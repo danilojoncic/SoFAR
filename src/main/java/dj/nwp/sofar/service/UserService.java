@@ -5,8 +5,12 @@ import dj.nwp.sofar.dto.ServiceResponse;
 import dj.nwp.sofar.dto.UserOperation;
 import dj.nwp.sofar.dto.UserPresentation;
 import dj.nwp.sofar.mapper.UserMapper;
+import dj.nwp.sofar.model.ErrorMessage;
+import dj.nwp.sofar.model.FoodOrder;
 import dj.nwp.sofar.model.Permission;
 import dj.nwp.sofar.model.SUser;
+import dj.nwp.sofar.repository.ErrorMessageRepository;
+import dj.nwp.sofar.repository.FoodOrderRepository;
 import dj.nwp.sofar.repository.PermissionRepository;
 import dj.nwp.sofar.repository.UserRepository;
 import dj.nwp.sofar.service.abstraction.UserAbs;
@@ -28,6 +32,8 @@ public class UserService implements UserAbs {
     private final UserRepository userRepository;
     private final PermissionRepository permissionRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FoodOrderRepository orderRepository;
+    private final ErrorMessageRepository errorMessageRepository;
 
 
     @Override
@@ -91,6 +97,15 @@ public class UserService implements UserAbs {
     public ServiceResponse deleteUser(Long id) {
         return userRepository.findById(id)
                 .map(SUser -> {
+
+
+                    List<FoodOrder> allOrdersByUser = orderRepository.findFoodOrdersByCreatedBy_Id(SUser.getId());
+                    allOrdersByUser.forEach(order -> {order.setCreatedBy(null);});
+
+
+                    List<ErrorMessage> allErrorMessagesByUser = errorMessageRepository.findErrorMessagesByFoodOrder_CreatedBy_Email(SUser.getEmail());
+                    allErrorMessagesByUser.forEach(errorMessage -> {errorMessage.getFoodOrder().setCreatedBy(null);});
+
                     userRepository.deleteById(id);
                     return new ServiceResponse(201,new Message("User with id "+id+" deleted"));
                 })
