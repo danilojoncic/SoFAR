@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/dish/**").hasAuthority("CAN_VIEW")
 
                         .requestMatchers(HttpMethod.POST, "/order/**").hasAuthority("CAN_PLACE_ORDER")
+                        .requestMatchers(HttpMethod.POST, "/order/schedule").hasAuthority("CAN_SCHEDULE_ORDER")
                         .requestMatchers(HttpMethod.GET,"/order/search/**").hasAuthority("CAN_SEARCH_ORDER")
                         .requestMatchers(HttpMethod.PUT, "/order/cancel/**").hasAuthority("CAN_CANCEL_ORDER")
 

@@ -209,6 +209,13 @@ public class FoodOrderService implements FoodOrderAbs {
         if(!userRepository.existsByEmail(email)) return new ServiceResponse(404,new Message("User does not exist!"));
         SUser user = userRepository.findByEmail(email).get();
 
+        if(LocalDateTime.now().isAfter(dto.scheduleDateTime())){
+            logger.info("SCHEDULE ORDER IS SCHEDULED FOR TIME THAT ALREADY PASSED!");
+            return new ServiceResponse(401,new Message("Order cannot be scheduled,due to time issues!"));
+
+        }
+
+
         FoodOrder foodOrder = new FoodOrder(Status.SCHEDULED,false,dto.scheduleDateTime(),user,dishRepository.findByTitleIn(dto.dishes()));
         if(foodOrderRepository.countFoodOrderByStatus(Status.SCHEDULED) > 3){
             ErrorMessage errorMessage = new ErrorMessage();
