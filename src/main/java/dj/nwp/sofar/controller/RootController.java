@@ -15,7 +15,7 @@ public class RootController {
     @GetMapping
     public ResponseEntity<?> giveRootInfo(){
         List<RouteInfo> routes = new ArrayList<>();
-        routes.add(new RouteInfo("GET", "/",null));
+        routes.add(new RouteInfo("GET", "/","None"));
         return ResponseEntity.ok(routes);
     }
 }

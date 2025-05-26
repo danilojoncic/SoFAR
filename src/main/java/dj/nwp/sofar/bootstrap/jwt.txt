@@ -1,26 +1,52 @@
-ADMIN CREDENTIALS
-black@black.com
-pass
-ADMIN JWT
-eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fRURJVCIsIkNBTl9QTEFDRV9PUkRFUiIsIkNBTl9WSUVXIiwiQ0FOX1RSQUNLX09SREVSIiwiQ0FOX1NDSEVEVUxFX09SREVSIiwiQ0FOX0RFTEVURSIsIkNBTl9TRUFSQ0hfT1JERVIiLCJDQU5fQ0FOQ0VMX09SREVSIiwiQ0FOX0NSRUFURSJdLCJzdWIiOiJibGFja0BibGFjay5jb20iLCJpYXQiOjE3NDA5NTY4NDQsImV4cCI6MTc0OTU5Njg0NH0.T2Dv8hX7F_zgeu936wtwvMg0_c8LbupWCUCkC3yb66k
+ Permission p1 = new Permission("CAN_VIEW");
+            Permission p2 = new Permission("CAN_EDIT");
+            Permission p3 = new Permission("CAN_DELETE");
+            Permission p4 = new Permission("CAN_CREATE");
+            //EARCH, PLACE_ORDER, CANCEL, TRACK, SCHEDULE
+            Permission p5 = new Permission("CAN_SEARCH_ORDER");
+            Permission p6 = new Permission("CAN_PLACE_ORDER");
+            Permission p7 = new Permission("CAN_CANCEL_ORDER");
+            Permission p8 = new Permission("CAN_TRACK_ORDER");
+            Permission p9 = new Permission("CAN_SCHEDULE_ORDER");
+            List<Permission> permissions = List.of(
+                    p1, p2, p3, p4, p5, p6, p7, p8, p9
+            );
+            permissionRepository.saveAll(permissions);
+
+            UserOperation u1 = new UserOperation(
+                    "Edmund",
+                    "Blackadder",
+                    "black@black.com",
+                    "pass",
+                    List.of(p1.getTitle(), p2.getTitle(), p3.getTitle(), p4.getTitle(), p5.getTitle(), p6.getTitle(), p7.getTitle(), p8.getTitle(), p9.getTitle())
+            );
 
 
-MEDIUM USER CREDENTIALS
-darling@cpt.com
-passkey
-MEDIUM USER JWT
-eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fRURJVCIsIkNBTl9QTEFDRV9PUkRFUiIsIkNBTl9WSUVXIiwiQ0FOX0RFTEVURSIsIkNBTl9TRUFSQ0hfT1JERVIiLCJDQU5fQ1JFQVRFIl0sInN1YiI6ImRhcmxpbmdAY3B0LmNvbSIsImlhdCI6MTc0MDk1NTg0NywiZXhwIjoxNzQ5NTk1ODQ3fQ.8Qi4xQyMLQJbEITjoB-c2jGkIoQtNfiZ-LPqO-0etas
+            UserOperation u2 = new UserOperation(
+                    "Captain",
+                    "Darling",
+                    "darling@cpt.com",
+                    "passkey",
+                    List.of(p1.getTitle(), p2.getTitle(), p3.getTitle(), p4.getTitle(), p5.getTitle(), p6.getTitle())
+            );
 
+            UserOperation u3 = new UserOperation(
+                    "Baldrick",
+                    "Sodoff",
+                    "sod@off.com",
+                    "word",
+                    List.of(p1.getTitle())
+            );
 
+            UserOperation u4 = new UserOperation(
+                    "Hugh",
+                    "Laurie",
+                    "dr@house.com",
+                    "dr",
+                    List.of(p5.getTitle(), p6.getTitle(), p7.getTitle(), p8.getTitle(), p9.getTitle(), p1.getTitle())
+            );
 
-LOW USER CREDENTIALS
-dr@house.com
-dr
-LOW USER JWT
-eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJDQU5fUExBQ0VfT1JERVIiLCJDQU5fVklFVyIsIkNBTl9UUkFDS19PUkRFUiIsIkNBTl9TQ0hFRFVMRV9PUkRFUiIsIkNBTl9TRUFSQ0hfT1JERVIiLCJDQU5fQ0FOQ0VMX09SREVSIl0sInN1YiI6ImRyQGhvdXNlLmNvbSIsImlhdCI6MTc0MDk1NTk3OCwiZXhwIjoxNzQ5NTk1OTc4fQ.HWH7d_nV3cLxCU6YqRByd4IazWalUecEfTTGxbYx84I
-
-NO USER CREDENTIALS
-UserOperation u5 = new UserOperation(
+            UserOperation u5 = new UserOperation(
                     "Tommy",
                     "Poor old chap",
                     "army@uk.com",
