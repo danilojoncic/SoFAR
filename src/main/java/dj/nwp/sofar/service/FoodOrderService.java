@@ -90,6 +90,7 @@ public class FoodOrderService implements FoodOrderAbs {
 
     @Transactional
     public void updateOrderStatus(FoodOrder foodOrder,Status newStatus) {
+        logger.info("UPDATE ORDER STATUS from " + foodOrder.getStatus().toString() + " to " + newStatus.toString());
         foodOrder.setStatus(newStatus);
         foodOrderRepository.save(foodOrder);
         messagingTemplate.convertAndSend("/tracker/order-status/" + foodOrder.getId(), foodOrder);
@@ -114,17 +115,23 @@ public class FoodOrderService implements FoodOrderAbs {
         orders.forEach(order -> {
             switch (order.getStatus()) {
                 case ORDERED -> {
+                    //10 seconds after pressing order
+                    //10 + now = now + 10
                     if (order.getScheduleDateTime().plusSeconds(10).isBefore(now)) {
                         updateOrderStatus(order,Status.PREPARING);
                     }
                 }
                 case PREPARING -> {
-                    if (order.getScheduleDateTime().plusSeconds(15).isBefore(now)) {
+                    //15 seconds after getting into prepareing stage
+                    //10 + now + 15 = now + 25
+                    if (order.getScheduleDateTime().plusSeconds(25).isBefore(now)) {
                         updateOrderStatus(order,Status.IN_DELIVERY);
                     }
                 }
                 case IN_DELIVERY -> {
-                    if (order.getScheduleDateTime().plusSeconds(20).isBefore(now)) {
+                    //20 seconds after getting into in delivery stage
+                    //10 + now + 15 + 20 = now + 45
+                    if (order.getScheduleDateTime().plusSeconds(45).isBefore(now)) {
                         updateOrderStatus(order,Status.DELIVERED);
                     }
                 }
@@ -252,7 +259,7 @@ public class FoodOrderService implements FoodOrderAbs {
 
 
     private boolean checkDishList(List<String> dishes) {
-        return dishRepository.countByTitleIn(dishes) == dishes.size();
+        return dishes.stream().allMatch(dishRepository::existsByTitle);
     }
 
 
