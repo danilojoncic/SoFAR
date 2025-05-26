@@ -17,13 +17,13 @@ public class PermissionsController {
     @GetMapping("/as-object")
     public ResponseEntity<?> getAllPermissionsObjects(){
         ServiceResponse sr = permissionsService.getPermissions();
-        return null;
+        return ResponseEntity.status(sr.code()).body(sr.content());
     }
 
 
     @GetMapping("/as-string")
     public ResponseEntity<?> getAllPermissionsString(){
         ServiceResponse sr = permissionsService.getPermissionsString();
-        return null;
+        return ResponseEntity.status(sr.code()).body(sr.content());
     }
 }
