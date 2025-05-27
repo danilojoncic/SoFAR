@@ -254,7 +254,7 @@ public class FoodOrderService implements FoodOrderAbs {
         entityList.forEach(entity -> {
             presentationList.add(new OrderPresentation(
                     entity.getId(),
-                    entity.getCreatedBy().getEmail(),
+                    entity.getCreatedBy() == null ? "Deleted User" : entity.getCreatedBy().getEmail(),
                     entity.getItems(),
                     entity.getStatus().name(),
                     entity.getScheduleDateTime(),
