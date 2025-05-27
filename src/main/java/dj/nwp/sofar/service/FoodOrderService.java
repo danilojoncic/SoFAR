@@ -19,7 +19,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -162,13 +164,17 @@ public class FoodOrderService implements FoodOrderAbs {
 
 
         SUser user = userRepository.findByEmail(email).get();
-        List<Dish> dishList = dishRepository.findByTitleIn(dto.dishes());
+        List<Dish> dishes = dto.dishes().stream()
+                .map(dishRepository::findByTitle) 
+                .flatMap(Optional::stream)
+                .collect(Collectors.toList());
+
         FoodOrder foodOrder = new FoodOrder(
                 Status.ORDERED,
                 true,
                 LocalDateTime.now(),
                 user,
-                dishList
+                dishes
         );
         foodOrderRepository.save(foodOrder);
         return new ServiceResponse(200,new Message("Order Placed"));
