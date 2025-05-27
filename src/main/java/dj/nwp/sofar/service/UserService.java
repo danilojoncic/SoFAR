@@ -127,7 +127,7 @@ public class UserService implements UserAbs {
 
 
             if (dto.email() != null) SUser.setEmail(dto.email());
-            if (dto.password() != null) SUser.setPassword(dto.password());
+            if (dto.password() != null) SUser.setPassword(passwordEncoder.encode(dto.password()));
 
             if (dto.permissions() != null) {
                 if (!checkPermission(dto.permissions())) {
