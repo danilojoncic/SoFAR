@@ -232,8 +232,8 @@ public class FoodOrderService implements FoodOrderAbs {
             errorMessage.setOperation("SCHEDULING ERROR");
             errorMessage.setDescription("TOO MANY SCHEDULED ORDERS AT THIS TIME");
             errorMessage.setTimestamp(LocalDateTime.now());
-            errorMessageRepository.save(errorMessage);
             foodOrderRepository.save(foodOrder);
+            errorMessageRepository.save(errorMessage);
             return new ServiceResponse(401, new Message("Scheduling ERROR, too many scheduled orders"));
         }
         foodOrderRepository.save(foodOrder);
