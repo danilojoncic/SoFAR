@@ -34,7 +34,8 @@ public class SecurityConfig {
             "/auth/login",
             "/actuator/health",
             "/routes",
-            "/order/track/ping/**"
+            "/order/track/ping/**",
+            "/ws/**"
     };
 
     @Bean

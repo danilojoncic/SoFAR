@@ -2,6 +2,7 @@ package dj.nwp.sofar.service;
 
 import dj.nwp.sofar.config.JWTUtil;
 import dj.nwp.sofar.dto.*;
+import dj.nwp.sofar.mapper.OrderMapper;
 import dj.nwp.sofar.model.*;
 import dj.nwp.sofar.repository.DishRepository;
 import dj.nwp.sofar.repository.ErrorMessageRepository;
@@ -95,7 +96,7 @@ public class FoodOrderService implements FoodOrderAbs {
         logger.info("UPDATE ORDER STATUS from " + foodOrder.getStatus().toString() + " to " + newStatus.toString());
         foodOrder.setStatus(newStatus);
         foodOrderRepository.save(foodOrder);
-        messagingTemplate.convertAndSend("/tracker/order-status/" + foodOrder.getId(), foodOrder);
+        messagingTemplate.convertAndSend("/tracker/order-status/" + foodOrder.getId(), OrderMapper.OrderToOrderPresentation(foodOrder));
     }
 
 
