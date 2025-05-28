@@ -103,7 +103,7 @@ public class FoodOrderService implements FoodOrderAbs {
 
 
     private boolean canPlaceNewOrder() {
-        long activeOrders = foodOrderRepository.countFoodOrderByStatusIn(List.of(Status.PREPARING, Status.IN_DELIVERY));
+        long activeOrders = foodOrderRepository.countFoodOrderByStatusIn(List.of(Status.PREPARING, Status.IN_DELIVERY,Status.ORDERED));
         return activeOrders < 3;
     }
 
@@ -158,10 +158,6 @@ public class FoodOrderService implements FoodOrderAbs {
             return new ServiceResponse(401,new Message("Invalid dish in order"));
         if(!checkEmail(email))
             return new ServiceResponse(401,new Message("Invalid user email"));
-        if(!canPlaceNewOrder()){
-            return new ServiceResponse(401,new Message("Order cannot be placed"));
-        }
-
 
 
         SUser user = userRepository.findByEmail(email).get();
@@ -177,6 +173,21 @@ public class FoodOrderService implements FoodOrderAbs {
                 user,
                 dishes
         );
+
+        if(!canPlaceNewOrder()){
+            foodOrder.setStatus(Status.CANCELED);
+            foodOrderRepository.save(foodOrder);
+            ErrorMessage errorMessage = new ErrorMessage();
+            errorMessage.setFoodOrder(foodOrder);
+            errorMessage.setDescription("Can't place new order");
+            errorMessage.setOperation("You tried to have more than 3 orders in the delivery stage at the same time!");
+            errorMessage.setTimestamp(LocalDateTime.now());
+            errorMessageRepository.save(errorMessage);
+            return new ServiceResponse(401,new Message("Order cannot be placed"));
+        }
+
+
+
         foodOrderRepository.save(foodOrder);
         return new ServiceResponse(200,new Message("Order Placed"));
     }

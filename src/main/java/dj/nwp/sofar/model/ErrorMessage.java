@@ -22,4 +22,5 @@ public class ErrorMessage {
 
     @Column(nullable = false)
     private LocalDateTime timestamp = LocalDateTime.now(); // Stores the time of the error
+
 }
