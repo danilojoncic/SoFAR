@@ -1,5 +1,4 @@
 package dj.nwp.sofar.config;
-
 import dj.nwp.sofar.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +34,7 @@ public class SecurityConfig {
             "/actuator/health",
             "/routes",
             "/order/track/ping/**",
-            "/ws/**"
+            "/ws/**",
     };
 
     @Bean

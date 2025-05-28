@@ -112,7 +112,7 @@ public class FoodOrderService implements FoodOrderAbs {
     public void processOrders() {
         logger.info("Processing orders");
         if(foodOrderRepository.count() == 0)return;
-        List<FoodOrder> orders = foodOrderRepository.findFoodOrdersByStatusIn(List.of(Status.ORDERED, Status.PREPARING, Status.IN_DELIVERY));
+        List<FoodOrder> orders = foodOrderRepository.findFoodOrdersByStatusIn(List.of(Status.ORDERED, Status.PREPARING, Status.IN_DELIVERY,Status.SCHEDULED));
         LocalDateTime now = LocalDateTime.now();
 
         orders.forEach(order -> {
